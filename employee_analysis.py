@@ -2,50 +2,57 @@
 Employee Performance Data Visualization
 Email: 23f1002057@ds.study.iitm.ac.in
 """
-
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 
-# Step 1: Create a sample dataset (you can replace this with pd.read_csv("your_file.csv"))
+# Example employee dataset
 data = {
-    "employee_id": ["EMP001","EMP002","EMP003","EMP004","EMP005","EMP006","EMP007","EMP008","EMP009","EMP010"],
-    "department": ["R&D","Marketing","Operations","HR","IT","R&D","Operations","R&D","HR","IT"],
-    "region": ["Middle East","Africa","Latin America","Latin America","Latin America",
-               "Africa","Middle East","Middle East","Africa","Latin America"],
-    "performance_score": [63.11,81.71,76.40,60.99,65.05,70.23,80.10,69.50,55.30,60.10],
-    "years_experience": [1,15,11,3,11,8,10,2,4,5],
-    "satisfaction_rating": [3.9,4.5,4.6,3.7,4.5,4.2,4.8,3.5,3.6,4.0]
+    "Name": ["Alice", "Bob", "Charlie", "David", "Eve", "Frank", "Grace", "Helen",
+             "Ian", "Jack", "Kathy", "Leo", "Mona", "Nina", "Oscar"],
+    "Department": ["R&D", "Sales", "R&D", "HR", "Sales", "R&D", "HR", "Sales",
+                   "R&D", "Sales", "R&D", "HR", "Sales", "R&D", "R&D"]
 }
-
 df = pd.DataFrame(data)
 
-# Step 2: Frequency count for "R&D" department
-rd_count = (df["department"] == "R&D").sum()
-print("Frequency of R&D Department:", rd_count)
+# Frequency count
+freq = df["Department"].value_counts()
 
-# Step 3: Plot histogram of department distribution
-plt.figure(figsize=(8,6))
-sns.countplot(data=df, x="department", palette="viridis")
-plt.title("Department Distribution")
+# --- Save Histogram ---
+plt.figure(figsize=(6,4))
+freq.plot(kind="bar", color="skyblue", edgecolor="black")
+plt.title("Employee Department Distribution")
 plt.xlabel("Department")
-plt.ylabel("Frequency")
-
-# Save chart as image
+plt.ylabel("Count")
+plt.tight_layout()
 plt.savefig("department_histogram.png")
+plt.close()
 
-# Step 4: Save everything to an HTML file
-html_content = f"""
+# --- Generate HTML file with frequency table + image ---
+html_content = """
 <html>
-<head><title>Employee Data Visualization</title></head>
+<head><title>Employee Analysis</title></head>
 <body>
-<h1>Employee Data Visualization</h1>
-<p><b>Email:</b> 23f1002057@ds.study.iitm.ac.in</p>
-<p><b>Frequency of R&D Department:</b> {rd_count}</p>
-<img src="department_histogram.png" width="600">
+<h1>Employee Department Analysis</h1>
+<p>This analysis shows the number of employees in each department.</p>
+
+<h2>Department Frequency Counts</h2>
+<ul>
+"""
+# Add frequency counts explicitly (e.g. "R&D: 15")
+for dept, count in freq.items():
+    html_content += f"<li>{dept}: {count}</li>\n"
+
+html_content += """
+</ul>
+
+<h2>Histogram</h2>
+<img src="department_histogram.png" alt="Department Histogram">
+
 </body>
 </html>
 """
 
 with open("employee_analysis.html", "w") as f:
     f.write(html_content)
+
+print("HTML file generated with frequency counts and histogram!")
